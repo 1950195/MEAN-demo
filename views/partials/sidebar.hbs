@@ -1,0 +1,10 @@
+<div class="col-sm-3 col-md-2 sidebar">
+    <tabset vertical="true" type="pills">
+        <tab ng-repeat="nav in navs | orderBy: 'index'" select="$location.path(nav.path)">
+            <tab-heading>
+                <span class="glyphicon" ng-class="'glyphicon-' + nav.icon"></span>
+                {{tpl.navName}}
+            </tab-heading>
+        </tab>
+    </tabset>
+</div>

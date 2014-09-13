@@ -1,0 +1,113 @@
+<div class="col-lg-12">
+    <h2 class="page-header">{{pageHeader}}</h2>
+    <button ng-click="openForm('add', '', {})" class="btn btn-primary btn-add-form">{{btnAdd}}</button>
+</div>
+<div class="col-lg-12" ng-if="errorMsg">
+    <alert type="danger" close="closeAlert()">{{tpl.errorMsg}}</alert>
+</div>
+<div class="col-lg-12 text-right" ng-class="{'ng-hide': users.length <= 10}">
+    <pagination total-items="users.length" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>{{_id}}</th>
+                <th>{{name}}</th>
+                <th>{{username}}</th>
+                <th>{{password}}</th>
+                <th>{{userGroup}}</th>
+                <th>{{enable}}</th>
+                <th>{{btnEdit}}</th>
+                <th>{{btnRemove}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="user in users | orderBy: ['userGroup.level', '_id'] | offset: (currentPage - 1) * maxSize | limitTo: maxSize">
+                <td>{{tpl._id}}</td>
+                <td>{{tpl.name}}</td>
+                <td>{{tpl.username}}</td>
+                <td>{{tpl.password}}</td>
+                <td>{{tpl.userGroup}}</td>
+                <td>{{tpl.enable}}</td>
+                <td>
+                    <button ng-click="openForm('update', '', user)" class="btn btn-primary btn-circle">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                </td>
+                <td>
+                    <button ng-if="user.deletable" ng-click="remove(user._id, '{{removeConfirm}}')" class="btn btn-danger btn-circle">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="col-lg-12 text-right" ng-class="{'ng-hide': users.length <= 10}">
+    <pagination total-items="users.length" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+</div>
+
+<script type="text/ng-template" id="userForm.tpl">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <form ng-submit="submit()" autocomplete="off" role="form" class="form-horizontal">
+        <div class="modal-header">
+            <h3 ng-if="type==='add'" class="modal-title">{{userForm.add}}</h3>
+            <h3 ng-if="type==='update'" class="modal-title">{{userForm.update}}</h3>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="username" class="col-sm-3 control-label">{{username}}：</label>
+                <div class="col-sm-8">
+                    <input ng-if="type==='add'" ng-model="user.username" type="text" id="username" class="form-control" placeholder="{{placeholder.username}}" required>
+                    <span ng-if="type==='update'" class="form-control" ng-bind-html="user.username"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                 <label for="password" class="col-sm-3 control-label">{{password}}：</label>
+                 <div class="col-sm-8">
+                    <input ng-model="user.password" type="text" id="password" class="form-control" placeholder="{{placeholder.password}}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name" class="col-sm-3 control-label">{{name}}：</label>
+                <div class="col-sm-8">
+                    <input ng-model="user.name" type="text" id="name" class="form-control" placeholder="{{placeholder.name}}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="userGroup" class="col-sm-3 control-label">{{userGroup}}：</label>
+                <div class="col-sm-8">
+                    <ui-select ng-model="userGroup.selected" theme="bootstrap" ng-disabled="disabled">
+                        <ui-select-match placeholder="{{placeholder.userGroup}}">{{tpl.selected}}</ui-select-match>
+                        <ui-select-choices repeat="userGroup in userGroups | orderBy: ['level', '_id'] | filter: $select.search">
+                            <span ng-bind-html="userGroup.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-8">
+                    <input ng-model="user.enable" type="radio" id="enableFalse" name="enable" ng-value="false" required>
+                    <label for="enableFalse">{{enableFalse}}</label>
+                    <input ng-model="user.enable" type="radio" id="enableTrue" name="enable" ng-value="true" required>
+                    <label for="enableTrue">{{enableTrue}}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-8">
+                    <input ng-model="user.deletable" type="radio" id="deletableFalse" name="deletable" ng-value="false" required>
+                    <label for="deletableFalse">{{deletableFalse}}</label>
+                    <input ng-model="user.deletable" type="radio" id="deletableTrue" name="deletable" ng-value="true" required>
+                    <label for="deletableTrue">{{deletableTrue}}</label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary">{{btnSubmit}}</button>
+        </div>
+    </form>
+</script>
+
