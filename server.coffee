@@ -23,7 +23,7 @@ fs.readdirSync models_path
 # express setting
 app     = require './config/app'
 
-app.set 'port', 80
+app.set 'port', process.env.PORT || 80
 port    = app.get 'port'
 
 server = app.listen port, ->
