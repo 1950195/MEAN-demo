@@ -8,7 +8,6 @@ favicon         = require 'serve-favicon'
 logger          = require 'morgan'
 session         = require 'express-session'
 bodyParser      = require 'body-parser'
-multer          = require 'multer'
 pkg             = require '../package.json'
 router          = require './router'
 app             = express()
@@ -33,8 +32,6 @@ app.use session
 app.use bodyParser.json()
 app.use bodyParser.urlencoded
     extended    : true
-app.use multer
-    dest        : '../uploads/'
 
 # routes
 app.use router
